@@ -1,14 +1,13 @@
 console.log("To ensure that the file is successfully loaded.");
 
 class MatrixEffect {
-  constructor(canvasId) {
+  constructor(canvasId, secretMessage = "HACKED!") {
     this.canvas = document.getElementById(canvasId);
     this.context = this.canvas.getContext("2d");
 
     this.taillePolice = 20;
-    this.matrice = "fevfvuyefuefiag&ali&éetfék'èé_é&u&œgezzguaikajiahdbudozoapoaazerettyyruririrorpr^r^r2663z5z565554445585787889966633221445554478896632".split(
-      ""
-    );
+    this.secretMessage = secretMessage.split("");
+    this.matrice = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("");
 
     this.chutes = [];
     this.initCanvas();
@@ -33,11 +32,17 @@ class MatrixEffect {
   dessinerCanvas() {
     this.context.fillStyle = "rgba(0, 0, 0, 0.1)";
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = "#0f0";
     this.context.font = `${this.taillePolice}px Arial`;
 
     for (let i = 0; i < this.chutes.length; i++) {
-      let text = this.matrice[Math.floor(Math.random() * this.matrice.length)];
+      let isSecretColumn = i % 10 === 0;
+      let text =
+        isSecretColumn && this.chutes[i] < this.secretMessage.length
+          ? this.secretMessage[this.chutes[i] % this.secretMessage.length] 
+          : this.matrice[Math.floor(Math.random() * this.matrice.length)];
+
+      this.context.fillStyle = isSecretColumn ? "#f00" : "#0f0";
+
       this.context.fillText(
         text,
         i * this.taillePolice,
@@ -57,6 +62,6 @@ class MatrixEffect {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const matrixEffect = new MatrixEffect("canvas");
+  const matrixEffect = new MatrixEffect("canvas", "HACKED!");
   matrixEffect.start();
 });
